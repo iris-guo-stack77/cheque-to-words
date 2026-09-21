@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ChequeToWords.Core/ChequeToWords.Core.csproj" />
+    <Project Path="src/ChequeToWords.Web/ChequeToWords.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ChequeToWords.Core.Tests/ChequeToWords.Core.Tests.csproj" />
+  </Folder>
+</Solution>
