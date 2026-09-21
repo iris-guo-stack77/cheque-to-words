@@ -1,0 +1,16 @@
+<section id="validation" data-transition="fade" style="background:#fbf9f4; color:#1f2937; font-family:-apple-system, 'Helvetica Neue', Arial, sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:36px">
+  <h2 style="font-family:Georgia, serif; font-size:64px; font-weight:400; color:#1b3a5c">Edge cases, and how they're handled</h2>
+  <table style="width:1664px; font-size:24px; border-collapse:collapse">
+    <tr>
+      <th style="text-align:left; padding:16px; background:#1b3a5c; color:#fbf9f4">Input</th>
+      <th style="text-align:left; padding:16px; background:#1b3a5c; color:#fbf9f4">Result</th>
+    </tr>
+    <tr><td style="padding:16px; border-bottom:1px solid #c9c2b0">-12.50</td><td style="padding:16px; border-bottom:1px solid #c9c2b0">Rejected &mdash; &ldquo;cannot be negative&rdquo;</td></tr>
+    <tr><td style="padding:16px; border-bottom:1px solid #c9c2b0">0</td><td style="padding:16px; border-bottom:1px solid #c9c2b0">&ldquo;Zero dollars only.&rdquo;</td></tr>
+    <tr><td style="padding:16px; border-bottom:1px solid #c9c2b0">0.05</td><td style="padding:16px; border-bottom:1px solid #c9c2b0">&ldquo;...five cents&rdquo; &mdash; not &ldquo;oh-five&rdquo;</td></tr>
+    <tr><td style="padding:16px; border-bottom:1px solid #c9c2b0">100.00</td><td style="padding:16px; border-bottom:1px solid #c9c2b0">&ldquo;...dollars only.&rdquo; &mdash; no &ldquo;and zero cents&rdquo;</td></tr>
+    <tr><td style="padding:16px; border-bottom:1px solid #c9c2b0">1.01</td><td style="padding:16px; border-bottom:1px solid #c9c2b0">&ldquo;One dollar and one cent.&rdquo; &mdash; singular</td></tr>
+    <tr><td style="padding:16px; border-bottom:1px solid #c9c2b0">12.345</td><td style="padding:16px; border-bottom:1px solid #c9c2b0">Rounded to 12.35, flagged in the UI</td></tr>
+    <tr><td style="padding:16px">&#36;1,234.56 &middot; abc &middot; 1e5</td><td style="padding:16px">Cleaned/parsed, or rejected clearly &mdash; never a crash</td></tr>
+  </table>
+</section>

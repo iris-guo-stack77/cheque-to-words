@@ -16,3 +16,6 @@ out/
 TestResults/
 coverage*.xml
 coverage*.json
+
+## Packaged submission zip (kept alongside project, not in git)
+/../ChequeToWords_IrisGuo.zip

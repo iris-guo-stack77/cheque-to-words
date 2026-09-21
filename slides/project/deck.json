@@ -1,0 +1,14 @@
+{
+  "v": 4,
+  "createdOnFiles": {"v": 1, "at": "2026-09-22T10:40:00Z"},
+  "title": "Cheque to Words — BookingTimes Take-Home",
+  "order": ["cover", "requirements", "architecture", "algorithm", "validation", "ui-states", "testing", "closing"],
+  "sections": {
+    "s1": {"description": "What Adam asked for, and what I built", "start": "cover"},
+    "s2": {"description": "Why ASP.NET Core MVC — matched to where BookingTimes is heading", "start": "architecture"},
+    "s3": {"description": "The conversion algorithm and input validation", "start": "algorithm"},
+    "s4": {"description": "Proof it works: the UI, tests, and coverage", "start": "ui-states"}
+  },
+  "faces": {},
+  "designSystems": []
+}

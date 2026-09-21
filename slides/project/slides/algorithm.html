@@ -1,0 +1,22 @@
+<section id="algorithm" data-transition="fade" style="background:#1b3a5c; color:#fbf9f4; font-family:-apple-system, 'Helvetica Neue', Arial, sans-serif; padding:128px 128px 160px; display:flex; flex-direction:column; gap:40px">
+  <h2 style="font-family:Georgia, serif; font-size:64px; font-weight:400; color:#fbf9f4">The core rule: comma vs &ldquo;and&rdquo;</h2>
+  <div style="display:flex; gap:48px; flex:1">
+    <div style="flex:1.2; background:#132a42; border-radius:16px; padding:40px; display:flex; flex-direction:column; gap:14px">
+      <p style="font-family:'SFMono-Regular', Menlo, Consolas, monospace; font-size:22px; color:#8fb3d9">// AmountToWordsConverter.cs</p>
+      <p style="font-family:'SFMono-Regular', Menlo, Consolas, monospace; font-size:22px; color:#d7cdb8">var isLast = i == nonZeroGroups.Count - 1;</p>
+      <p style="font-family:'SFMono-Regular', Menlo, Consolas, monospace; font-size:22px; color:#d7cdb8">var connector = isLast &amp;&amp; value &lt; 100</p>
+      <p style="font-family:'SFMono-Regular', Menlo, Consolas, monospace; font-size:22px; color:#c9a869">&nbsp;&nbsp;? " and "</p>
+      <p style="font-family:'SFMono-Regular', Menlo, Consolas, monospace; font-size:22px; color:#c9a869">&nbsp;&nbsp;: ", ";</p>
+    </div>
+    <div style="flex:1; display:flex; flex-direction:column; gap:24px">
+      <div style="background:#fbf9f4; border-radius:16px; padding:32px; display:flex; flex-direction:column; gap:8px">
+        <p style="font-size:22px; color:#8a8474; text-transform:uppercase; letter-spacing:2px">1234 &rarr; has a hundreds digit</p>
+        <p style="font-family:Georgia, serif; font-style:italic; font-size:28px; color:#1b3a5c">one thousand<span style="color:#b3261e">,</span> two hundred and thirty-four</p>
+      </div>
+      <div style="background:#fbf9f4; border-radius:16px; padding:32px; display:flex; flex-direction:column; gap:8px">
+        <p style="font-size:22px; color:#8a8474; text-transform:uppercase; letter-spacing:2px">1005 &rarr; tens/ones only</p>
+        <p style="font-family:Georgia, serif; font-style:italic; font-size:28px; color:#1b3a5c">one thousand <span style="color:#2f6f4f">and</span> five</p>
+      </div>
+    </div>
+  </div>
+</section>
