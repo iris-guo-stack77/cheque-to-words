@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cheque to Words — BookingTimes Take-Home</title>
+<style>
+  :root {
+    --navy: #1b3a5c;
+    --navy-dark: #0f2135;
+    --panel-dark: #132a42;
+    --paper: #fbf9f4;
+    --line: #c9c2b0;
+    --text: #1f2937;
+    --muted: #5c6470;
+    --gold: #c9a869;
+    --green: #2f6f4f;
+    --green-bright: #6fcf97;
+    --red: #b3261e;
+    --sky: #8fb3d9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #e4e9ef;
+    color: var(--text);
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  .toc {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--navy);
+    color: var(--paper);
+    padding: 14px 32px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.15);
+  }
+  .toc a { color: #cfe0f0; text-decoration: none; }
+  .toc a:hover { color: #fff; text-decoration: underline; }
+  .toc strong { color: var(--gold); }
+
+  .deck { max-width: 1120px; margin: 40px auto 80px; padding: 0 24px; display: flex; flex-direction: column; gap: 40px; }
+  .slide {
+    background: var(--paper);
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(15,23,42,.14);
+    aspect-ratio: 16 / 9;
+    padding: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .slide.dark { background: var(--navy); color: var(--paper); }
+  .slide .num {
+    position: absolute; right: 28px; bottom: 20px;
+    font-size: 13px; color: var(--muted); letter-spacing: 1px;
+  }
+  .slide.dark .num { color: #9fb0c2; }
+
+  h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 400; margin: 0; }
+  .eyebrow { font-size: 15px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin: 0 0 8px; }
+
+  /* Cover */
+  #cover { justify-content: center; gap: 20px; }
+  #cover h1 { font-size: 56px; line-height: 1.1; max-width: 720px; }
+  #cover p.lede { font-size: 20px; color: #d7cdb8; max-width: 620px; line-height: 1.4; margin: 0; }
+  #cover .byline { position: absolute; left: 64px; bottom: 40px; }
+  #cover .byline p { margin: 0; }
+  #cover .byline .name { font-size: 16px; }
+  #cover .byline .date { font-size: 14px; color: #9fb0c2; }
+
+  h2.title { font-size: 38px; color: var(--navy); margin-bottom: 4px; }
+  .slide.dark h2.title { color: var(--paper); }
+
+  .row { display: flex; gap: 28px; flex: 1; min-height: 0; }
+  .card {
+    flex: 1;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: auto;
+  }
+  .card.navy { background: var(--navy); color: var(--paper); border: none; }
+  .card h3 { font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; font-size: 18px; font-weight: 600; margin: 0; }
+  .card p { font-size: 15px; line-height: 1.5; margin: 0; }
+  .card ul { font-size: 15px; line-height: 1.55; margin: 0; padding-left: 20px; }
+  .card ul li { margin-bottom: 4px; }
+
+  .quote { font-family: Georgia, serif; font-style: italic; font-size: 18px; line-height: 1.45; margin: 0; }
+
+  code, pre, .mono { font-family: "SFMono-Regular", Menlo, Consolas, monospace; }
+  pre.codeblock {
+    background: var(--panel-dark);
+    color: #d7cdb8;
+    border-radius: 12px;
+    padding: 22px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    margin: 0;
+    overflow: auto;
+    flex: 1.2;
+  }
+  pre.codeblock .comment { color: var(--sky); }
+  pre.codeblock .kw { color: var(--gold); }
+
+  table.edge { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.edge th { text-align: left; background: var(--navy); color: var(--paper); padding: 10px 14px; }
+  table.edge td { padding: 9px 14px; border-bottom: 1px solid var(--line); }
+  table.edge tr:last-child td { border-bottom: none; }
+
+  .mock { flex: 1; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .mock .label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; }
+  .mock .input { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; font-size: 15px; }
+  .mock .stub { border-top: 2px solid var(--line); padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .mock .stub .k { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #8a8474; }
+  .mock .stub .words { font-family: Georgia, serif; font-style: italic; font-size: 14.5px; color: var(--navy); }
+  .mock .stub .words.empty { color: #9ca3af; }
+  .mock .err { font-size: 13px; color: var(--red); font-weight: 600; }
+
+  .stat { background: #fff; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 4px; }
+  .stat .n { font-size: 42px; font-weight: 700; color: var(--green); }
+  .stat .l { font-size: 14px; color: var(--muted); }
+
+  #closing { justify-content: center; }
+  #closing ul { font-size: 18px; line-height: 1.8; padding-left: 22px; }
+
+  @media print {
+    .toc { display: none; }
+    body { background: #fff; }
+    .slide { box-shadow: none; page-break-after: always; }
+  }
+  @media (max-width: 720px) {
+    .slide { aspect-ratio: auto; padding: 32px; }
+    .row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="toc">
+  <strong>Cheque to Words</strong>
+  <a href="#cover">Cover</a>
+  <a href="#requirements">Requirements</a>
+  <a href="#architecture">Architecture</a>
+  <a href="#algorithm">Algorithm</a>
+  <a href="#validation">Edge cases</a>
+  <a href="#ui-states">UI</a>
+  <a href="#testing">Testing</a>
+  <a href="#closing">Closing</a>
+</nav>
+
+<div class="deck">
+
+  <section class="slide dark" id="cover">
+    <p class="eyebrow">BookingTimes — Round 2 Take-Home</p>
+    <h1>Cheque Amount to Words</h1>
+    <p class="lede">An ASP.NET Core MVC app that turns 1234.56 into &ldquo;One thousand, two hundred and thirty-four dollars and fifty-six cents.&rdquo;</p>
+    <div class="byline">
+      <p class="name">Iris Guo</p>
+      <p class="date">22 September 2026</p>
+    </div>
+  </section>
+
+  <section class="slide" id="requirements">
+    <h2 class="title">What was asked, and what I built</h2>
+    <div class="row">
+      <div class="card">
+        <h3 style="color:var(--navy)">Adam's brief</h3>
+        <p>Write a small .NET program that turns a cheque amount into words — e.g. 1234.56 becomes &ldquo;One thousand, two hundred and thirty-four dollars and fifty-six cents.&rdquo;</p>
+        <p>Return the code, a note on testing and edge cases, and a good UI. AI use expected.</p>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--green)">Delivered</h3>
+        <ul>
+          <li>ASP.NET Core MVC app with a live, styled UI</li>
+          <li>Conversion logic in its own tested class library</li>
+          <li>48 automated tests, 95.6% line coverage</li>
+          <li>Validation for negative, non-numeric, oversized input</li>
+          <li>README documenting every edge case considered</li>
+        </ul>
+      </div>
+    </div>
+    <div class="num">2 / 8</div>
+  </section>
+
+  <section class="slide" id="architecture">
+    <h2 class="title">Why ASP.NET Core MVC, not WPF</h2>
+    <div class="row">
+      <div class="card" style="flex:1; gap:16px">
+        <div class="card navy" style="padding:20px; gap:8px">
+          <p class="eyebrow" style="margin:0">Round 1 interview, verbatim</p>
+          <p class="quote">&ldquo;I'm hoping in the next 12 months, all of it will be in C sharp and we'll be running on Razor.&rdquo;</p>
+        </div>
+        <div style="padding:4px 2px">
+          <p style="font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:#8a8474; margin:0 0 6px">Job description</p>
+          <p style="margin:0">&ldquo;Work with ASP.NET, VB.NET and/or C#&rdquo; &middot; &ldquo;Develop customer-facing interfaces&rdquo;</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="color:var(--red)">Why not WPF / MVVM</h3>
+        <p>WPF is Windows-only — it can't build or run on my Mac. I'd have shipped code I could never actually test, which conflicts with &ldquo;test your work and take responsibility for it.&rdquo;</p>
+        <h3 style="color:var(--green); margin-top:8px">Chosen instead</h3>
+        <p>ASP.NET Core MVC (C#, Razor views) — cross-platform, matches BookingTimes' stated direction, and Controller / View / Model stay cleanly separated.</p>
+      </div>
+    </div>
+    <div class="num">3 / 8</div>
+  </section>
+
+  <section class="slide dark" id="algorithm">
+    <h2 class="title">The core rule: comma vs &ldquo;and&rdquo;</h2>
+    <div class="row">
+      <pre class="codeblock"><span class="comment">// AmountToWordsConverter.cs</span>
+<span class="kw">var</span> isLast = i == nonZeroGroups.Count - 1;
+<span class="kw">var</span> connector = isLast &amp;&amp; value &lt; 100
+    ? <span style="color:#e8d8a8">" and "</span>
+    : <span style="color:#e8d8a8">", "</span>;</pre>
+      <div style="flex:1; display:flex; flex-direction:column; gap:16px">
+        <div class="card">
+          <p style="font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:#8a8474; margin:0">1234 → has a hundreds digit</p>
+          <p class="quote" style="color:var(--navy); font-size:19px">one thousand<span style="color:var(--red)">,</span> two hundred and thirty-four</p>
+        </div>
+        <div class="card">
+          <p style="font-size:12px; text-transform:uppercase; letter-spacing:1.5px; color:#8a8474; margin:0">1005 → tens/ones only</p>
+          <p class="quote" style="color:var(--navy); font-size:19px">one thousand <span style="color:var(--green)">and</span> five</p>
+        </div>
+      </div>
+    </div>
+    <div class="num">4 / 8</div>
+  </section>
+
+  <section class="slide" id="validation">
+    <h2 class="title">Edge cases, and how they're handled</h2>
+    <table class="edge">
+      <tr><th>Input</th><th>Result</th></tr>
+      <tr><td>-12.50</td><td>Rejected — &ldquo;cannot be negative&rdquo;</td></tr>
+      <tr><td>0</td><td>&ldquo;Zero dollars only.&rdquo;</td></tr>
+      <tr><td>0.05</td><td>&ldquo;...five cents&rdquo; — not &ldquo;oh-five&rdquo;</td></tr>
+      <tr><td>100.00</td><td>&ldquo;...dollars only.&rdquo; — no &ldquo;and zero cents&rdquo;</td></tr>
+      <tr><td>1.01</td><td>&ldquo;One dollar and one cent.&rdquo; — singular</td></tr>
+      <tr><td>12.345</td><td>Rounded to 12.35, flagged in the UI</td></tr>
+      <tr><td>"$1,234.56", "abc", "1e5"</td><td>Cleaned/parsed, or rejected clearly — never a crash</td></tr>
+    </table>
+    <div class="num">5 / 8</div>
+  </section>
+
+  <section class="slide" id="ui-states">
+    <h2 class="title">The UI, live</h2>
+    <div class="row">
+      <div class="mock">
+        <p class="label" style="color:var(--navy)">Typing...</p>
+        <div class="input">$ 1234.56</div>
+        <div class="stub"><p class="k">Pay the sum of</p><p class="words empty">—</p></div>
+      </div>
+      <div class="mock">
+        <p class="label" style="color:var(--green)">Live result</p>
+        <div class="input">$ 1234.56</div>
+        <div class="stub"><p class="k">Pay the sum of</p><p class="words">One thousand, two hundred and thirty-four dollars and fifty-six cents.</p></div>
+      </div>
+      <div class="mock">
+        <p class="label" style="color:var(--red)">Validation error</p>
+        <div class="input">$ -12.50</div>
+        <div class="stub"><p class="k">Pay the sum of</p><p class="words empty">—</p><p class="err">Cheque amount cannot be negative.</p></div>
+      </div>
+    </div>
+    <div class="num">6 / 8</div>
+  </section>
+
+  <section class="slide dark" id="testing">
+    <h2 class="title">48 tests, all green</h2>
+    <div class="row">
+      <pre class="codeblock" style="flex:1.1">
+<span class="comment">$ dotnet test</span>
+Test run for ChequeToWords.Core.Tests.dll
+<span style="color:var(--green-bright); font-weight:600">Passed! — Failed: 0, Passed: 48, Skipped: 0, Total: 48</span>
+<span class="comment">Duration: 31 ms</span></pre>
+      <div style="flex:.9; display:flex; flex-direction:column; gap:16px">
+        <div class="stat"><span class="n">95.65%</span><span class="l">line coverage</span></div>
+        <div class="stat"><span class="n">95.23%</span><span class="l">branch coverage</span></div>
+      </div>
+    </div>
+    <div class="num">7 / 8</div>
+  </section>
+
+  <section class="slide" id="closing">
+    <h2 style="font-size:44px; color:var(--navy)">Thanks, Adam</h2>
+    <ul>
+      <li>Core logic is framework-independent and fully unit tested</li>
+      <li>UI is live, validated, and works with JavaScript disabled too</li>
+      <li>Built with Claude Code, checked against a project harness (CLAUDE.md + verify.sh) on every change — not accepted on trust alone</li>
+    </ul>
+    <p style="font-size:16px; color:var(--muted)">Happy to walk through any part of the code or my reasoning in the next round.</p>
+    <div class="num">8 / 8</div>
+  </section>
+
+</div>
+</body>
+</html>
