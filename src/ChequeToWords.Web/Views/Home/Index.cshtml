@@ -1,8 +1,52 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model ChequeToWords.Web.Models.ChequeAmountViewModel
+@{
+    ViewData["Title"] = "Convert";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="cheque-page">
+    <p class="lede">
+        Turn a cheque amount into words — e.g. <code>1234.56</code> becomes
+        <em>"One thousand, two hundred and thirty-four dollars and fifty-six cents."</em>
+    </p>
+
+    <div class="cheque-card">
+        <form asp-action="Index" method="post" id="cheque-form" novalidate>
+            @Html.AntiForgeryToken()
+
+            <label for="amount-input" class="form-label">Cheque Amount (NZD)</label>
+            <div class="input-group input-group-lg">
+                <span class="input-group-text">$</span>
+                <input
+                    type="text"
+                    inputmode="decimal"
+                    autocomplete="off"
+                    class="form-control"
+                    id="amount-input"
+                    name="Amount"
+                    placeholder="e.g. 1234.56"
+                    value="@Model.Amount" />
+                <button class="btn btn-primary" type="submit">Convert</button>
+            </div>
+
+            <div class="cheque-stub" aria-live="polite">
+                <span class="cheque-stub-label">Pay the sum of</span>
+                <span id="result-line" class="cheque-stub-words@(Model.Error is not null ? " is-empty" : "")">@(Model.Words ?? "—")</span>
+            </div>
+
+            <div id="feedback-area">
+                @if (Model.Error is not null)
+                {
+                    <p id="error-message" class="feedback feedback-error" role="alert">@Model.Error</p>
+                }
+                @if (Model.WasRounded)
+                {
+                    <p id="rounding-note" class="feedback feedback-note">Amount was rounded to the nearest cent.</p>
+                }
+            </div>
+
+            <button type="button" id="copy-button" class="btn btn-outline-secondary btn-sm" disabled>
+                Copy words
+            </button>
+        </form>
+    </div>
 </div>
